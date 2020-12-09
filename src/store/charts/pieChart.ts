@@ -45,7 +45,7 @@ export default {
         text: 'Vulnerabilities distribution',
       },
       tooltip: {
-        pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{point.name}: <b>{point.y}</b>'
       },
       accessibility: {
         point: {
@@ -57,6 +57,11 @@ export default {
   mutations: {
     aggregatePie(state, payload) {
       state.charOptions.series[0].data = [
+        {
+          name: 'Critical',
+          y: payload.critical,
+          color: 'purple',
+        },
         {
           name: 'High',
           y: payload.high,
@@ -71,6 +76,11 @@ export default {
           name: 'Low',
           y: payload.low,
           color: 'green',
+        },
+        {
+          name: 'None',
+          y: payload.none,
+          color: 'grey',
         },
       ]
     }

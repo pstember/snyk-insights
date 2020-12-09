@@ -13,6 +13,7 @@ export interface Vulnerability extends Issue {
   readonly isPatchable: boolean;
   readonly isIgnored: boolean;
   readonly severity: Severity;
+  readonly cvssScore: string;
 }
 
 export type Severity = 'low' | 'medium' | 'high';

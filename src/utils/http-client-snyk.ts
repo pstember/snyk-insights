@@ -1,6 +1,7 @@
-import { AxiosRequestConfig } from 'axios';
-import { ListIssuesRequest } from './apiTypes';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { ListIssueResponse, ListIssuesRequest } from './apiTypes';
 import HttpClient from './http-client';
+import axios from 'axios';
 
 export default class SnykAPI extends HttpClient {
   private static classInstance?: SnykAPI;
@@ -32,7 +33,19 @@ export default class SnykAPI extends HttpClient {
     return res;
   };
 
-  public listIssues = (body: ListIssuesRequest) => this.instance.post('/reporting/issues/latest?page=1&perPage=100&sortBy=issueTitle&order=asc&groupBy=issue', body);
+  public listAllIssues = async (body: ListIssuesRequest) => {
+    const req = this.instance.post('/reporting/issues/latest?page=1&perPage=1000&sortBy=issueTitle&order=asc', body)
+    const response = [ req ];
+    await req.then( (r: AxiosResponse<ListIssueResponse>) => {
+      if( r.data.total > 1000 ) {
+        const pages = Math.ceil(r.data.total / 1000);
+        for ( let i = 1 ; i < pages ; i++) {
+          response.push(this.instance.post(`/reporting/issues/latest?page=${1+i}&perPage=1000&sortBy=issueTitle&order=asc`, body));
+        }
+      }
+    });
+    return axios.all(response);
+  };
 
   public countIssues = (body: ListIssuesRequest) => this.instance.post('/reporting/counts/issues/latest?groupBy=severity', body);
 

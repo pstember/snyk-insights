@@ -17,19 +17,22 @@ const reqBody: ListIssuesRequest = { filters: { orgs: [process.env.VUE_APP_ORG] 
 const vulns: Vulnerability[] = [];
 const severities = {h:0, m:0, l:0};
 
-const res = apiClient.listIssues(reqBody).then( (res) => {  
+const res = apiClient.listAllIssues(reqBody).then( (responseArr) => {  
 
-  for (const i of res.results) {
-    vulns.push(i.issue);
+  for( const res of responseArr) {
+    for (const i of res.data.results) {
+      vulns.push(i.issue);
+    }
+    console.log('one request is treated')
   }
-  //debugger;
+  // debugger;
 });
 
-const countIssue = apiClient.countIssues(reqBody).then( (res) => {  
+const countIssue = apiClient.countIssues(reqBody).then( (res) => {
 
-  severities.h = res.results[0].severity.high;
-  severities.m = res.results[0].severity.medium;
-  severities.l = res.results[0].severity.low;
+  severities.h = res.data.results[0].severity.high;
+  severities.m = res.data.results[0].severity.medium;
+  severities.l = res.data.results[0].severity.low;
   //debugger;
 });
 
@@ -43,12 +46,16 @@ new Vue({
 }).$mount('#app');
 
 Promise.all([res]).then( () => {
-  store.commit('change', vulns.length);
+  // exclude docker
+  const v = vulns.filter( (x) => x.language != 'linux');
+  store.commit('change', v.length);
   store.dispatch('process', {
-    high: severities.h,
-    medium: severities.m,
-    low: severities.l,    
-    // low: vulns.filter( (x) => x.severity === 'low' ).length,    
+    critical: v.filter( (x) => +x.cvssScore >= 9.0 ).length,
+    high: v.filter( (x) => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 ).length,
+    medium: v.filter( (x) => +x.cvssScore < 7.0 && +x.cvssScore >= 4.0 ).length,
+    // low: severities.l,    
+    low: v.filter( (x) => +x.cvssScore < 4.0 && +x.cvssScore > 0.0 ).length, 
+    none: v.filter( (x) => +x.cvssScore == 0.0 ).length,
     // let chart = this.$refs.highcharts.chart.chart.redraw();
   })
   // debugger;
