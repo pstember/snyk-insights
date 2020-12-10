@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ListIssueResponse, ListIssuesRequest } from './apiTypes';
+import { ListIssueResponse, APIFiltersBodyRequest, APIHeaderRequest } from './apiTypes';
 import HttpClient from './http-client';
 import axios from 'axios';
 
@@ -33,7 +33,7 @@ export default class SnykAPI extends HttpClient {
     return res;
   };
 
-  public listAllIssues = async (body: ListIssuesRequest) => {
+  public listAllIssues = async (body: APIFiltersBodyRequest) => {
     const req = this.instance.post('/reporting/issues/latest?page=1&perPage=1000&sortBy=issueTitle&order=asc', body)
     const response = [ req ];
     await req.then( (r: AxiosResponse<ListIssueResponse>) => {
@@ -47,6 +47,8 @@ export default class SnykAPI extends HttpClient {
     return axios.all(response);
   };
 
-  public countIssues = (body: ListIssuesRequest) => this.instance.post('/reporting/counts/issues/latest?groupBy=severity', body);
+  public countIssues = (body: APIFiltersBodyRequest) => this.instance.post('/reporting/counts/issues/latest?groupBy=severity', body);
+
+  public listLicenses = (params: APIHeaderRequest, body: APIFiltersBodyRequest) => this.instance.post(`/org/${params.org}/licenses?sortBy=severity&order=asc`,body);
 
 }

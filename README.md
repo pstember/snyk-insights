@@ -27,3 +27,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+The theme is coming from:
+https://www.creative-tim.com/product/vue-light-bootstrap-dashboard

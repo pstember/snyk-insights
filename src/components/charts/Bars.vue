@@ -1,11 +1,5 @@
 <template>
   <div>
-    <b>{{ $store.getters.flavor }}</b><br/>
-    <b>critical - {{ $store.getters.critical }}</b><br/>
-    <b>high - {{ $store.getters.high }}</b><br/>
-    <b>medium - {{ $store.getters.medium }}</b><br/>
-    <b>low - {{ $store.getters.low }}</b><br/>
-    <b>none - {{ $store.getters.none }}</b><br/>
     <highcharts class="hc" :options="chartOptions" ref="chart_bars"></highcharts>
   </div>
 </template>

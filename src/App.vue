@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Vulns customer="Stemby"/>
+    <img alt="Vue logo" src="./assets/logo.png" style="height: 300px;">
+    <dashboard-container customer="Stemby"/>
+    <footer-element></footer-element>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Vulns from './components/Vulns.vue';
+import DashboardContainer from './components/DashboardContainer.vue';
+import FooterElement from './components/TheFooter.vue';
 
 @Component({
   components: {
-    Vulns,
+    DashboardContainer,
+    FooterElement,
   },
 })
 export default class App extends Vue {}
@@ -24,6 +27,6 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: #f8f9fa;
 }
 </style>
