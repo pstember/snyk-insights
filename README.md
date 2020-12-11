@@ -33,6 +33,8 @@ https://www.creative-tim.com/product/vue-light-bootstrap-dashboard
 
 You will need ot create a `env.local` and have the following properties defined
 
+```
 VUE_APP_ENDPOINT=api
 VUE_APP_SNYK_TOKEN=<YOUR TOKEN>
 VUE_APP_ORG=<YOUR TOKEN>
+```
