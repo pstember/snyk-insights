@@ -1,7 +1,6 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ListIssueResponse, APIFiltersBodyRequest, APIHeaderRequest } from './apiTypes';
 import HttpClient from './http-client';
-import axios from 'axios';
 
 export default class SnykAPI extends HttpClient {
   private static classInstance?: SnykAPI;
