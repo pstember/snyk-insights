@@ -7,7 +7,10 @@
             </div>
             <div slot="content" class="numbers">
                     <p>Critical</p>
-                    {{ $store.getters.overview.critical }}
+                    {{ $store.getters.overview.critical }}<br/>
+            </div>
+            <div slot="footer">
+              <b-icon icon="tools"></b-icon> {{ $store.getters.overview.criticalFixable }} fixable
             </div>
           </stats-card>
       </b-col>
@@ -20,6 +23,11 @@
                     <p>High</p>
                     {{ $store.getters.overview.high }}
             </div>
+            <div slot="footer" class="text-left">
+              <b-icon icon="tools"></b-icon> {{ $store.getters.overview.highFixable }} fixable <br/> 
+              <b-icon icon="exclamation-triangle-fill" style="color: red;"></b-icon> {{ $store.getters.overview.highMature }} mature exploits <br/>
+              <b-icon-alarm-fill style="color: green;"></b-icon-alarm-fill> {{ $store.getters.overview.highAction }} are both
+            </div>
           </stats-card>
       </b-col>
             <b-col>
@@ -30,6 +38,9 @@
             <div slot="content" class="numbers">
                     <p>Medium</p>
                     {{ $store.getters.overview.medium }}
+            </div>
+            <div slot="footer">
+              <b-icon icon="tools"></b-icon> {{ $store.getters.overview.mediumFixable }} fixable
             </div>
           </stats-card>
       </b-col>
@@ -42,6 +53,9 @@
                     <p>Low</p>
                     {{ $store.getters.overview.low }}
             </div>
+            <div slot="footer">
+              <b-icon icon="tools"></b-icon> {{ $store.getters.overview.lowFixable }} fixable
+            </div>
           </stats-card>
       </b-col>
                   <b-col>
@@ -52,6 +66,9 @@
             <div slot="content" class="numbers">
                     <p>None</p>
                     {{ $store.getters.overview.none }}
+            </div>
+            <div slot="footer">
+              <b-icon icon="tools"></b-icon> {{ $store.getters.overview.noneFixable }} fixable
             </div>
           </stats-card>
         </b-col>

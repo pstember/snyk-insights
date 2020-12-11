@@ -7,7 +7,7 @@ import App from './App.vue';
 // Snyk API import
 import SnykAPI from './utils/http-client-snyk';
 import { APIFiltersBodyRequest, APIHeaderRequest } from './utils/apiTypes';
-import { Vulnerability, Severity } from './utils/types';
+import { Issue, License } from './utils/types';
 // Front-end import
 import './plugins/bootstrap-vue';
 // LightBootstrap plugin
@@ -38,23 +38,31 @@ const reqBody: APIFiltersBodyRequest = {
 }};
 
 // fetch vuln and store them in memory
-const vulns: Vulnerability[] = [];
+const vulns: Issue[] = [];
 apiClient.listAllIssues(reqBody).then( (responseArr) => {  
-  for( const res of responseArr) {
-    for (const i of res.data.results) {
-      vulns.push(i.issue);
-    }
-  }
+  responseArr.map( res => {
+    res.data.results.map( (item: { issue: Issue }) => vulns.push(item.issue));
+  });
+
+  // debugger;
 
   const v = vulns;
   const overview = {
     critical: v.filter( (x) => +x.cvssScore >= 9.0 ).length,
+    criticalFixable: v.filter( (x) => +x.cvssScore >= 9.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
     high: v.filter( (x) => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 ).length,
+    highFixable: v.filter( (x) => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+    highMature: v.filter( (x) => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 ).filter( x=> x.exploitMaturity == "mature").length,
+    highAction: v.filter( (x) => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).filter( x=> x.exploitMaturity == "mature").length,
     medium: v.filter( (x) => +x.cvssScore < 7.0 && +x.cvssScore >= 4.0 ).length,
-    // low: severities.l,    
+    mediumFixable: v.filter( (x) => +x.cvssScore < 7.0 && +x.cvssScore >= 4.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
     low: v.filter( (x) => +x.cvssScore < 4.0 && +x.cvssScore > 0.0 ).length, 
+    lowFixable: v.filter( (x) => +x.cvssScore < 4.0 && +x.cvssScore > 0.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length, 
     none: v.filter( (x) => +x.cvssScore == 0.0 ).length,
+    noneFixable: v.filter( (x) => +x.cvssScore == 0.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
   }
+
+  debugger;
   
   // updating store for dynamic rendering
   store.dispatch('process', {
@@ -62,19 +70,12 @@ apiClient.listAllIssues(reqBody).then( (responseArr) => {
   });
 });
 
-const licenses = [];
+const licenses: License[] = [];
 const params: APIHeaderRequest = {
   org: process.env.VUE_APP_ORG,
 }
 apiClient.listLicenses(params,reqBody).then( (response) => {
-  const res = response.data.results;
-  for( const lic of res){
-    licenses.push({
-      name: lic.id,
-      y: lic.dependencies.length,
-    })
-  }
-  store.commit('updateLicense', licenses);
+  store.commit('updateLicense', response.data.results);
 });
 
 

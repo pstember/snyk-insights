@@ -1,8 +1,4 @@
-export interface Issue {
-    readonly id: string;
-}
-  
-export interface Vulnerability extends Issue {
+  export interface Issue{
   readonly id: string;
   readonly type: string;
   readonly language: string;
@@ -18,6 +14,21 @@ export interface Vulnerability extends Issue {
 
 export type Severity = 'low' | 'medium' | 'high';
 
-export interface License extends Issue {
-  title: string;
+export interface License {
+  readonly id: string;
+  readonly dependencies: Dependency[];
+}
+
+export interface Dependency {
+  readonly id: string;
+  readonly name: string;
+  readonly version: string;
+  readonly packageManager: string;
+}
+
+export interface IssueEnriched {
+  readonly issue: Issue[];
+  readonly isFixed: boolean;
+  readonly introduceDate: string;
+  // readonly project: Project[]; // not implemented yet
 }

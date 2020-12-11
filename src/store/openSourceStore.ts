@@ -11,6 +11,13 @@ export default {
       medium: 1,
       low: 2,
       none: 0,
+      criticalFixable: 2,
+      highFixable: 0,
+      mediumFixable: 0,
+      lowFixable: 1,
+      noneFixable: 0,
+      highMature: 0,
+      highAction: 0,
     },
     updated: false,
     licUpdated: false,
@@ -112,10 +119,10 @@ export default {
       state.overview = payload.overview;
       state.updated = true;
     },
-    updateLicense(state, licenses) {
+    updateLicense(state, licenses: License[]) {
       state.licUpdated = true;
-      state.licenseChart.series[0].data = licenses;
-    }
+      state.licenseChart.series[0].data = licenses.map( l => { return { name: l.id, y: l.dependencies.length}})
+    },
   },
   getters: {
     chartOptions: state => state.charOptions,
