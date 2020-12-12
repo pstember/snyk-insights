@@ -7,7 +7,7 @@ import App from './App.vue';
 // Snyk API import
 import SnykAPI from './utils/http-client-snyk';
 import { APIFiltersBodyRequest, APIHeaderRequest } from './utils/apiTypes';
-import { Issue, License } from './utils/types';
+import { Dependency, Issue, License } from './utils/types';
 // Front-end import
 import './plugins/bootstrap-vue';
 // LightBootstrap plugin
@@ -35,6 +35,7 @@ const reqBody: APIFiltersBodyRequest = {
   filters: { 
     orgs: [process.env.VUE_APP_ORG],
     languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift'],
+    type: ['vuln', 'license'],
 }};
 
 // fetch vuln and store them in memory
@@ -62,7 +63,7 @@ apiClient.listAllIssues(reqBody).then( (responseArr) => {
     noneFixable: v.filter( (x) => +x.cvssScore == 0.0 ).filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
   }
 
-  debugger;
+  // debugger;
   
   // updating store for dynamic rendering
   store.dispatch('process', {
@@ -78,6 +79,24 @@ apiClient.listLicenses(params,reqBody).then( (response) => {
   store.commit('updateLicense', response.data.results);
 });
 
+
+// fetch dependencies and store insights in memory
+const deps: Dependency[] = [];
+const packageManagerCount = {};
+apiClient.listAllDependencies(params, reqBody).then( (responseArr) => {  
+  responseArr.map( res => {
+    res.data.results.map( item => {
+      packageManagerCount[item.type] = (packageManagerCount[item.type] || 0) + 1 
+      deps.push(item);
+    });
+  });
+
+  // debugger;
+
+  // updating store for dynamic rendering
+  store.commit('updatePackage', packageManagerCount);
+  store.commit('updateDependencies', deps);
+});
 
 // If I need something done when ALL the request have been processed
 // For example, display all data loaded or whatever. left here for later

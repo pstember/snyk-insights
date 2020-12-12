@@ -13,7 +13,7 @@ export default new Vuex.Store({
   actions: {
     process (context, payload) {
       context.commit('aggregate', payload);
-      context.commit('aggregatePie', payload); // from Piestore
+      context.commit('aggregatePie', payload);
     }
   },
   getters: {

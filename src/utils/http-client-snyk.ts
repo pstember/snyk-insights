@@ -33,13 +33,29 @@ export default class SnykAPI extends HttpClient {
   };
 
   public listAllIssues = async (body: APIFiltersBodyRequest) => {
-    const req = this.instance.post('/reporting/issues/latest?page=1&perPage=1000&sortBy=issueTitle&order=asc', body)
+    const perPage = 1000;
+    const req = this.instance.post(`/reporting/issues/latest?page=1&perPage=${perPage}&sortBy=issueTitle&order=asc`, body)
     const response = [ req ];
     await req.then( (r: AxiosResponse<ListIssueResponse>) => {
-      if( r.data.total > 1000 ) {
-        const pages = Math.ceil(r.data.total / 1000);
+      if( r.data.total > perPage ) {
+        const pages = Math.ceil(r.data.total / perPage);
         for ( let i = 1 ; i < pages ; i++) {
-          response.push(this.instance.post(`/reporting/issues/latest?page=${1+i}&perPage=1000&sortBy=issueTitle&order=asc`, body));
+          response.push(this.instance.post(`/reporting/issues/latest?page=${1+i}&perPage=${perPage}&sortBy=issueTitle&order=asc`, body));
+        }
+      }
+    });
+    return axios.all(response);
+  };
+
+  public listAllDependencies = async (params: APIHeaderRequest, body: APIFiltersBodyRequest) => {
+    const perPage = 5000;
+    const req = this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=asc&page=1&perPage=${perPage}`,body);
+    const response = [ req ];
+    await req.then( (r: AxiosResponse<ListIssueResponse>) => {
+      if( r.data.total > perPage ) {
+        const pages = Math.ceil(r.data.total / perPage);
+        for ( let i = 1 ; i < pages ; i++) {
+          response.push(this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=asc&page=${1+i}&perPage=${perPage}`, body));
         }
       }
     });

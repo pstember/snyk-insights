@@ -16,14 +16,26 @@ export type Severity = 'low' | 'medium' | 'high';
 
 export interface License {
   readonly id: string;
-  readonly dependencies: Dependency[];
+  readonly dependencies: LicenseDependency[];
 }
 
-export interface Dependency {
+interface BaseDependency {
   readonly id: string;
   readonly name: string;
   readonly version: string;
+}
+
+export interface LicenseDependency extends BaseDependency {
   readonly packageManager: string;
+}
+
+export interface Dependency extends BaseDependency {
+  readonly latestVersion: string;
+  readonly isDeprecated: boolean;
+  readonly issuesHigh: number;
+  readonly issuesMedium: number;
+  readonly issuesLow: number;
+  readonly type: string;
 }
 
 export interface IssueEnriched {

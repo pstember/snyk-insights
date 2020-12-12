@@ -26,7 +26,7 @@
             <div slot="footer" class="text-left">
               <b-icon icon="tools"></b-icon> {{ $store.getters.overview.highFixable }} fixable <br/> 
               <b-icon icon="exclamation-triangle-fill" style="color: red;"></b-icon> {{ $store.getters.overview.highMature }} mature exploits <br/>
-              <b-icon-alarm-fill style="color: green;"></b-icon-alarm-fill> {{ $store.getters.overview.highAction }} are both
+              <b-icon icon="tools"></b-icon> + <b-icon icon="exclamation-triangle-fill" style="color: red;"></b-icon> = {{ $store.getters.overview.highAction }}
             </div>
           </stats-card>
       </b-col>

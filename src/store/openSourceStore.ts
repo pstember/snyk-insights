@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { LicenseDependency, License, Dependency } from '../utils/types';
 
 Vue.use(Vuex)
 
@@ -83,6 +84,48 @@ export default {
         }
       },
     },
+    // package chart
+    packageChart: {
+      series: [{
+        data: [],
+      }],
+      chart: { type: 'pie' },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}: <b>{point.percentage:.1f} %'
+          }
+        }
+      },
+      caption: {
+        text: 'This chart display the current distribution of your package managers.',
+      },
+      title: {
+        text: 'Dependency distribution',
+      },
+      tooltip: {
+        pointFormat: '{point.name}: <b>{point.y}</b>'
+      },
+      accessibility: {
+        point: {
+          valueSuffix: '%'
+        }
+      },
+    },
+    // dependencies metrics
+    dependencies: {
+      updated: false,
+      outdated: 0,
+      deprecated: 0,
+      total: 0,
+      vulnerable: 0,
+      deprecatedAndVuln: 0,
+      outdatedAndVuln: 0,
+      updatedAndVuln: 0,
+    }
   },
   mutations: {
     aggregatePie(state, payload) {
@@ -123,13 +166,29 @@ export default {
       state.licUpdated = true;
       state.licenseChart.series[0].data = licenses.map( l => { return { name: l.id, y: l.dependencies.length}})
     },
+    updatePackage(state, packManager) {
+      state.packageChart.series[0].data = Object.entries(packManager).map( ([key, value]) => { return { name: key, y: value}});
+    },
+    updateDependencies(state, dependencies: Dependency[]) {
+      // TODO move logic outside of the store
+      state.dependencies.outdated = dependencies.filter( d => d.version != d.latestVersion).length;
+      state.dependencies.deprecated = dependencies.filter( d => d.isDeprecated).length;
+      state.dependencies.total = dependencies.length;
+      state.dependencies.vulnerable = dependencies.filter( d => d.issuesHigh > 0 || d.issuesMedium > 0 || d.issuesLow > 0).length;
+      state.dependencies.deprecatedAndVuln = dependencies.filter( d => d.isDeprecated  && (d.issuesHigh > 0 || d.issuesMedium > 0 || d.issuesLow > 0)).length;
+      state.dependencies.outdatedAndVuln = dependencies.filter( d => d.version != d.latestVersion && (d.issuesHigh > 0 || d.issuesMedium > 0 || d.issuesLow > 0)).length;
+      state.dependencies.updatedAndVuln = dependencies.filter( d => d.version == d.latestVersion && (d.issuesHigh > 0 || d.issuesMedium > 0 || d.issuesLow > 0)).length;
+      state.dependencies.updated = true;
+    },   
   },
   getters: {
     chartOptions: state => state.charOptions,
     licenseChart: state => state.licenseChart,
+    packageChart: state => state.packageChart,
     overview: state => state.overview,
     updated: state => state.updated,
     licUpdated: state => state.licUpdated,
+    dependencies: state => state.dependencies,
   },
   modules: {
   }
