@@ -167,7 +167,7 @@ export default {
       state.licenseChart.series[0].data = licenses.map( l => { return { name: l.id, y: l.dependencies.length}})
     },
     updatePackage(state, packManager) {
-      state.packageChart.series[0].data = Object.entries(packManager).map( ([key, value]) => { return { name: key, y: value}});
+      state.packageChart.series[0].data = Object.entries(packManager).sort(([key, value],[kay2, value2]) => value2 - value).map( ([key, value]) => { return { name: key, y: value}});
     },
     updateDependencies(state, dependencies: Dependency[]) {
       // TODO move logic outside of the store
