@@ -1,36 +1,26 @@
 <template>
   <div>
-    <b-row>
-      <b-col>
-        <h2>Open-source</h2>
-      </b-col>
-    </b-row>
-    <dashboard-open-source-overview></dashboard-open-source-overview>
-    <b-row>
-      <b-col>
-        <pie-chart v-if="$store.getters.updated" v-bind:chartOptions="$store.getters.chartOptions"></pie-chart>
-        <b-spinner v-else class="mx-auto" label="Spinning" ></b-spinner>
-      </b-col>
-      <b-col>
-        <pie-chart v-if="$store.getters.licUpdated" v-bind:chartOptions="$store.getters.licenseChart"></pie-chart>
-        <b-spinner v-else class="mx-auto" label="Spinning" ></b-spinner>
-      </b-col>
-    </b-row>
+    <dashboard-open-source-dependencies></dashboard-open-source-dependencies>
+    <dashboard-open-source-licenses></dashboard-open-source-licenses>
     <dashboard-open-source-quality></dashboard-open-source-quality>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import DashboardOpenSourceOverview from './DashboardOpenSourceOverview.vue';
-import PieChart from '../charts/PieChart.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import DashboardOpenSourceDependencies from './DashboardOpenSourceDependencies.vue';
+import DashboardOpenSourceLicenses from './DashboardOpenSourceLicenses.vue';
 import DashboardOpenSourceQuality from './DashboardOpenSourceQuality.vue';
+import PieChart from '../charts/PieChart.vue'
+import StatsCard from '../baseElements/baseCards/BaseStatsCard.vue';
 
 @Component({
   components: {
-    DashboardOpenSourceOverview,
-    PieChart,
+    DashboardOpenSourceDependencies,
+    DashboardOpenSourceLicenses,
     DashboardOpenSourceQuality,
+    PieChart,
+    StatsCard,
   },
 })
 export default class DashboardOpenSource extends Vue {

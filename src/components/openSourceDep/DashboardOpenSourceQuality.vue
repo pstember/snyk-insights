@@ -21,6 +21,9 @@
                         <p>Total</p>
                         {{ $store.getters.dependencies.total }}<br/>
                 </div>
+              <div slot="footer">
+                <b-icon icon="pie-chart-fill"></b-icon> {{ $store.getters.dependencies.duplicate }} in mulitple versions
+              </div>
               </stats-card>
           </b-col>
           <b-col cols="6">
@@ -74,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import StatsCard from '../baseElements/baseCards/BaseStatsCard.vue';
 import PieChart from '../charts/PieChart.vue'
 

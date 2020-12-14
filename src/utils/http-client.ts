@@ -24,5 +24,5 @@ export default abstract class HttpClient {
 
   private handleResponse = (data: AxiosResponse) => data;
 
-  protected handleError = (error: any) => Promise.reject(error);
+  protected handleError = (error: Error) => Promise.reject(error);
 }

@@ -11,10 +11,10 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
-    process (context, payload) {
-      context.commit('aggregate', payload);
-      context.commit('aggregatePie', payload);
-    }
+    // process (context, payload) {
+    //   context.commit('aggregate', payload);
+    //   context.commit('aggregatePie', payload);
+    // }
   },
   getters: {
   },

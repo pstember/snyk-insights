@@ -1,4 +1,4 @@
-import _Vue, { VNode, PropOptions, WatchOptionsWithHandler, WatchHandler, CreateElement } from "vue";
+import _Vue from "vue";
 // import VTooltip from 'v-tooltip'
 // Notifications plugin
 import Notifications from './components/baseElements/notificationPlugin'
