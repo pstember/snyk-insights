@@ -96,6 +96,33 @@ export default class OpenSource {
             color: 'grey',
           },
         ],
+        dataFix: [
+          {
+            name: 'Critical',
+            y: criticals.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            color: 'purple',
+          },
+          {
+            name: 'High',
+            y: highs.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            color: 'red',
+          },
+          {
+            name: 'Medium',
+            y: mediums.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            color: 'orange',
+          },
+          {
+            name: 'Low',
+            y: lows.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            color: 'green',
+          },
+          {
+            name: 'None',
+            y: nones.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            color: 'grey',
+          },
+        ],
       }
 
       // debugger;
@@ -111,7 +138,14 @@ export default class OpenSource {
       org: process.env.VUE_APP_ORG,
     }
     OpenSource.apiClient.listLicenses(params,OpenSource.reqVulnBody).then( (response) => {
-      store.commit('updateLicense', response.data.results);
+      store.commit('updateLicense', response.data.results.sort( (l2, l1) => {
+        if(l1.severity == l2.severity) {
+          return l1.dependencies.length - l2.dependencies.length;
+        } else {
+          const sev = {high: 3, medium: 2, low: 1};
+          return (sev[l1.severity] || 0) - (sev[l2.severity] || 0)
+        }
+      }));
     });
 
     OpenSource.apiClient.countIssues(OpenSource.reqLicBody).then( response => {
