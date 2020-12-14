@@ -85,7 +85,7 @@
         <b-spinner v-else class="mx-auto" label="Spinning" ></b-spinner>
       </b-col>
       <b-col>
-        <pie-chart v-if="$store.getters.vulnerabilities.updated" v-bind:chartOptions="$store.getters.vulnerabilities.vulnsCharOptions"></pie-chart>
+        <pie-chart v-if="$store.getters.vulnerabilities.updated" v-bind:chartOptions="$store.getters.vulnerabilities.fixableVulnsCharOptions"></pie-chart>
         <b-spinner v-else class="mx-auto" label="Spinning" ></b-spinner>
       </b-col>
     </b-row>

@@ -49,9 +49,40 @@ export default {
           },
         },
       },
+      // fixable vulnerability graph
+      fixableVulnsCharOptions: {
+        series: [{
+            data: [],
+          }],
+        chart: { type: 'pie' },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: <b>{point.percentage:.1f} %',
+            },
+          },
+        },
+        caption: {
+          text: 'This chart display the current distribution of fixable vulnerabilities accross the board.',
+        },
+        title: {
+          text: 'Fixable vulnerabilities distribution',
+        },
+        tooltip: {
+          pointFormat: '{point.name}: <b>{point.y}</b>',
+        },
+        accessibility: {
+          point: {
+            valueSuffix: '%',
+          },
+        },
+      },
     },
     licUpdated: false,
-    // graph 2
+    // license chart
     licenseChart: {
       series: [{
         data: [],
@@ -71,7 +102,7 @@ export default {
         text: 'This chart display the current distribution of licenses accross all the dependencies.',
       },
       title: {
-        text: 'License distribution',
+        text: 'Dependency distribution per license violation',
       },
       tooltip: {
         pointFormat: '{point.name}: <b>{point.y}</b>'
@@ -136,11 +167,35 @@ export default {
     updateVulnerabilities(state, payload) {
       state.vulnerabilities.metrics = payload.metrics;
       state.vulnerabilities.vulnsCharOptions.series[0].data = payload.data;
+      state.vulnerabilities.fixableVulnsCharOptions.series[0].data = payload.dataFix;
       state.vulnerabilities.updated = true;
     },
     updateLicense(state, licenses: License[]) {
+      // Color to be used to render graph, gradient is used among similar severity
+      const redColor = ["#FF0000", "#FF1A1A", "#FF3333", "#FF4D4D",
+                        "#FF6666", "#FF8080", "#FF9999", "#FFB3B3",
+                        "#FFCCCC", "#FFE6E6"];
+      let red = 0;
+      const orangeColor = ["#FFA500", "#FFAE1A", "#FFB733", "#FFC04D",
+                           "#FFC966", "#FFD280", "#FFDB99", "#FFE4B3",
+                           "#FFEDCC", "#FFF6E6"];
+      let orange = 0;
+      const greenColor = ["#008000", "#1A8D1A", "#339933", "#4DA64D",
+                          "#66B366", "#80C080", "#99CC99", "#B3D9B3",
+                          "#CCE6CC", "#E6F2E6"];
+      let green = 0;       
       state.licUpdated = true;
-      state.licenseChart.series[0].data = licenses.map( l => { return { name: l.id, y: l.dependencies.length}});
+      debugger;
+      state.licenseChart.series[0].data = licenses
+        .filter( l => l.severity != "" && l.severity != "none")
+        .map( l => { 
+        return { 
+          name: l.id, 
+          y: l.dependencies.length, 
+          color: l.severity == "high" ? redColor[red++ % redColor.length] : 
+                  l.severity == "medium" ? orangeColor[orange++ % orangeColor.length] : 
+                  l.severity == "low" ? greenColor[green++ % greenColor.length] : "grey"}
+      });
       state.licenses.total = state.licenses.total + licenses.reduce( (sum, current) => sum + current.dependencies.length, 0 );
     },
     updateLicenseCount(state, payload) {

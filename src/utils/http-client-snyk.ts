@@ -49,13 +49,13 @@ export default class SnykAPI extends HttpClient {
 
   public listAllDependencies = async (params: APIHeaderRequest, body: APIFiltersBodyRequest) => {
     const perPage = 5000;
-    const req = this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=asc&page=1&perPage=${perPage}`,body);
+    const req = this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=desc&page=1&perPage=${perPage}`,body);
     const response = [ req ];
     await req.then( (r: AxiosResponse<ListIssueResponse>) => {
       if( r.data.total > perPage ) {
         const pages = Math.ceil(r.data.total / perPage);
         for ( let i = 1 ; i < pages ; i++) {
-          response.push(this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=asc&page=${1+i}&perPage=${perPage}`, body));
+          response.push(this.instance.post(`/org/${params.org}/dependencies?sortBy=dependency&order=desc&page=${1+i}&perPage=${perPage}`, body));
         }
       }
     });
@@ -64,6 +64,6 @@ export default class SnykAPI extends HttpClient {
 
   public countIssues = (body: APIFiltersBodyRequest) => this.instance.post('/reporting/counts/issues/latest?groupBy=severity', body);
 
-  public listLicenses = (params: APIHeaderRequest, body: APIFiltersBodyRequest) => this.instance.post(`/org/${params.org}/licenses?sortBy=severity&order=asc`,body);
+  public listLicenses = (params: APIHeaderRequest, body: APIFiltersBodyRequest) => this.instance.post(`/org/${params.org}/licenses?sortBy=dependencies&order=desc`,body);
 
 }
