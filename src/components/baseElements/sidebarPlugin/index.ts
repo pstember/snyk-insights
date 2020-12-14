@@ -1,4 +1,4 @@
-import _Vue, { VNode, PropOptions, WatchOptionsWithHandler, WatchHandler, CreateElement } from "vue";
+import _Vue from "vue";
 import Sidebar from './BaseSideBar.vue'
 import SidebarLink from './BaseSidebarLink.vue'
 

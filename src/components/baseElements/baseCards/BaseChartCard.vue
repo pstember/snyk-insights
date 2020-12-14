@@ -12,12 +12,9 @@
   </div>
 </template>
 <script>
-  import Card from './BaseCard.vue'
-
-  export default {
+    export default {
     name: 'chart-card',
     components: {
-      Card
     },
     props: {
       chartType: {
@@ -53,7 +50,7 @@
        * Initializes the chart by merging the chart options sent via props and the default chart options
        */
       initChart () {
-        var chartIdQuery = `#${this.chartId}`
+        const chartIdQuery = `#${this.chartId}`
         this.chart = this.$Chartist[this.chartType](chartIdQuery, this.chartData, this.chartOptions, this.responsiveOptions)
         this.$emit('initialized', this.chart)
         if (this.chartType === 'Line') {
@@ -76,8 +73,8 @@
       },
       animateLineChart () {
         let seq = 0
-        let durations = 500
-        let delays = 80
+        const durations = 500
+        const delays = 80
         this.chart.on('draw', (data) => {
           if (data.type === 'line' || data.type === 'area') {
             data.element.animate({
@@ -106,8 +103,8 @@
       },
       animateBarChart () {
         let seq = 0
-        let durations = 500
-        let delays = 80
+        const durations = 500
+        const delays = 80
         this.chart.on('draw', (data) => {
           if (data.type === 'bar') {
             seq++

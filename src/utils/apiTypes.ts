@@ -11,10 +11,10 @@ export interface Filters {
 }
 
 export interface ListIssueResponse {
-  readonly results: Issue[],
-  readonly total: number,
+  readonly results: Issue[];
+  readonly total: number;
 }
 
 export interface APIHeaderRequest {
-  readonly org: string,
+  readonly org: string;
 }

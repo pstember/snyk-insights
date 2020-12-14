@@ -11,7 +11,7 @@ import StatsCard from './baseElements/baseCards/baseStatsCard.vue'
 
 import SidebarPlugin from './baseElements/sidebarPlugin'
 
-let components = {
+const components = {
   BaseCheckbox,
   Radio,
   BaseInput,
