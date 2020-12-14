@@ -92,7 +92,6 @@ export default {
         pie: {
           allowPointSelect: true,
           cursor: 'pointer',
-          colors: 'Highcharts.getOptions().colors',
           dataLabels: {
             enabled: true,
             format: '{point.name}: <b>{point.percentage:.1f} %'
