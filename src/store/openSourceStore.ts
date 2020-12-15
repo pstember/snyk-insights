@@ -1,4 +1,4 @@
-import { License } from '../utils/types';
+import { Issue, License } from '../utils/types';
 
 export default {
   state: {
@@ -17,6 +17,7 @@ export default {
         highMature: 0,
         highAction: 0,
       },
+      actionVulns: [],
       updated: false,
       // vulnerability graph
       vulnsCharOptions: {
@@ -185,7 +186,6 @@ export default {
                           "#CCE6CC", "#E6F2E6"];
       let green = 0;       
       state.licUpdated = true;
-      debugger;
       state.licenseChart.series[0].data = licenses
         .filter( l => l.severity != "" && l.severity != "none")
         .map( l => { 
@@ -210,6 +210,9 @@ export default {
     updateDependencies(state, dependencies) {
       state.dependencies = dependencies;
     },
+    updateVulnAction(state, vulnerabilities: Issue[]) {
+      state.vulnerabilities.actionVulns = vulnerabilities;
+    }
   },
   getters: {
     chartOptions: state => state.vulnerabilities.vulnsCharOptions,

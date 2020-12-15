@@ -5,7 +5,7 @@ import store from '../store'
 // Snyk API import
 import SnykAPI from '../utils/http-client-snyk';
 import { APIFiltersBodyRequest as APIFiltersVulnBodyRequest, APIHeaderRequest } from '../utils/apiTypes';
-import { Dependency, Issue } from '../utils/types';
+import { Dependency, IssueEnriched } from '../utils/types';
 
 Vue.use(Vuex)
 
@@ -36,38 +36,38 @@ export default class OpenSource {
 
   protected static async loadIssues() {
     // fetch vuln and store them in memory
-    const vulns: Issue[] = [];
+    const vulns: IssueEnriched[] = [];
     OpenSource.apiClient.listAllIssues(OpenSource.reqVulnBody).then( (responseArr) => {  
       responseArr.map( res => {
-        res.data.results.map( (item: { issue: Issue }) => vulns.push(item.issue));
+        res.data.results.map( (item: IssueEnriched) => vulns.push(item));
       });
 
       // debugger;
 
-      const criticals = vulns.filter( x => +x.cvssScore >= 9.0 );
-      const highs = vulns.filter( x => +x.cvssScore < 9.0 && +x.cvssScore >= 7.0 );
-      const mediums = vulns.filter( x => +x.cvssScore < 7.0 && +x.cvssScore >= 4.0 );
-      const lows = vulns.filter( x => +x.cvssScore < 4.0 && +x.cvssScore > 0.0 );
-      const nones = vulns.filter( x => +x.cvssScore == 0.0 );
+      const criticals = vulns.filter( x => +x.issue.cvssScore >= 9.0 );
+      const highs = vulns.filter( x => +x.issue.cvssScore < 9.0 && +x.issue.cvssScore >= 7.0 );
+      const mediums = vulns.filter( x => +x.issue.cvssScore < 7.0 && +x.issue.cvssScore >= 4.0 );
+      const lows = vulns.filter( x => +x.issue.cvssScore < 4.0 && +x.issue.cvssScore > 0.0 );
+      const nones = vulns.filter( x => +x.issue.cvssScore == 0.0 );
       const vulnerabilitiesPayload = {
 
         metrics: {
           critical: criticals.length,
-          criticalFixable: criticals.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+          criticalFixable: criticals.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
           
           high: highs.length,
-          highFixable: highs.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
-          highMature: highs.filter( x=> x.exploitMaturity == "mature").length,
-          highAction: highs.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).filter( x=> x.exploitMaturity == "mature").length,
+          highFixable: highs.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
+          highMature: highs.filter( x=> x.issue.exploitMaturity == "mature").length,
+          highAction: highs.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).filter( x=> x.issue.exploitMaturity == "mature").length,
           
           medium: mediums.length,
-          mediumFixable: mediums.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+          mediumFixable: mediums.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
           
           low: lows.length, 
-          lowFixable: lows.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length, 
+          lowFixable: lows.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length, 
           
           none: nones.length,
-          noneFixable: nones.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+          noneFixable: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
         },
         data: [
           {
@@ -99,36 +99,53 @@ export default class OpenSource {
         dataFix: [
           {
             name: 'Critical',
-            y: criticals.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            y: criticals.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'purple',
           },
           {
             name: 'High',
-            y: highs.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            y: highs.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'red',
           },
           {
             name: 'Medium',
-            y: mediums.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            y: mediums.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'orange',
           },
           {
             name: 'Low',
-            y: lows.filter( (x) => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            y: lows.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'green',
           },
           {
             name: 'None',
-            y: nones.filter( x => x.isUpgradable || x.isPatchable || x.isPinnable ).length,
+            y: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'grey',
           },
         ],
       }
 
-      // debugger;
-      
+      // debugger;      
       // updating store for dynamic rendering
       store.commit('updateVulnerabilities', vulnerabilitiesPayload);
+
+      const actionVuln = vulns.filter(v => v.issue.language != 'linux')
+                              .sort( (v1,v2) => v2.issue.priorityScore - v1.issue.priorityScore)
+                              .slice(0,10)
+                              .map( item => {
+                                return {
+                                  priorityScore: item.issue.priorityScore,
+                                  title: item.issue.title,
+                                  package: item.issue.package,
+                                  version: item.issue.version,
+                                  language: item.issue.language,
+                                  isFixable: (item.issue.isPatchable || item.issue.isUpgradable || item.issue.isPinnable) ? true : false,
+                                  project: item.project.name,
+                                  source: item.project.source,
+                                  snykUrl: item.project.url,
+                                }
+                              });
+      store.commit('updateVulnAction', actionVuln);
     });
   }
 
