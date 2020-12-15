@@ -140,6 +140,7 @@ export default class OpenSource {
                                   version: item.issue.version,
                                   language: item.issue.language,
                                   isFixable: (item.issue.isPatchable || item.issue.isUpgradable || item.issue.isPinnable) ? true : false,
+                                  exploit: item.issue.exploitMaturity,
                                   project: item.project.name,
                                   source: item.project.source,
                                   snykUrl: item.project.url,
