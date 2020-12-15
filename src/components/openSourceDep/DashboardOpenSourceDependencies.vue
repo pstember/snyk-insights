@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import Card from '../baseElements/baseCards/BaseCard.vue';
 import StatsCard from '../baseElements/baseCards/BaseStatsCard.vue';
 import PieChart from '../charts/PieChart.vue'
@@ -106,6 +106,5 @@ import PieChart from '../charts/PieChart.vue'
   },
 })
 export default class DashboardOpenSourceDependencies extends Vue {
-  @Prop() private customer!: string;
 }
 </script>
