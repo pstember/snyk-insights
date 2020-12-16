@@ -10,8 +10,8 @@
         <b-table 
           small 
           v-bind:items="$store.getters.vulnerabilities.actionVulns"
-          responsive=true
-          hover=true
+          v-bind:responsive="true"
+          v-bind:hover="true"
         >
           <!-- A custom formatted column -->
           <template #cell(isFixable)="items">

@@ -18,13 +18,13 @@ export default class OpenSource {
   protected static  reqVulnBody: APIFiltersVulnBodyRequest = { 
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
-      languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift'],
+      languages: ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'],
       type: ['vuln'],
   }};
   protected static  reqLicBody: APIFiltersVulnBodyRequest = { 
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
-      languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift'],
+      // languages: ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'], // using this screw the request, thanks god we don't do license in docker
       type: ['license'],
   }};
 
@@ -155,7 +155,7 @@ export default class OpenSource {
     const params: APIHeaderRequest = {
       org: process.env.VUE_APP_ORG,
     }
-    OpenSource.apiClient.listLicenses(params,OpenSource.reqVulnBody).then( (response) => {
+    OpenSource.apiClient.listLicenses(params,OpenSource.reqLicBody).then( (response) => {
       store.commit('updateLicense', response.data.results.sort( (l2: License, l1: License) => {
         if(l1.severity == l2.severity) {
           return l1.dependencies.length - l2.dependencies.length;
