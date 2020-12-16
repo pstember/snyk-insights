@@ -5,7 +5,7 @@ import store from '../store'
 // Snyk API import
 import SnykAPI from '../utils/http-client-snyk';
 import { APIFiltersBodyRequest as APIFiltersVulnBodyRequest, APIHeaderRequest } from '../utils/apiTypes';
-import { Dependency, IssueEnriched } from '../utils/types';
+import { Dependency, IssueEnriched, License } from '../utils/types';
 
 Vue.use(Vuex)
 
@@ -156,7 +156,7 @@ export default class OpenSource {
       org: process.env.VUE_APP_ORG,
     }
     OpenSource.apiClient.listLicenses(params,OpenSource.reqVulnBody).then( (response) => {
-      store.commit('updateLicense', response.data.results.sort( (l2, l1) => {
+      store.commit('updateLicense', response.data.results.sort( (l2: License, l1: License) => {
         if(l1.severity == l2.severity) {
           return l1.dependencies.length - l2.dependencies.length;
         } else {

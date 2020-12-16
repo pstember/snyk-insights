@@ -29,7 +29,7 @@ export type Severity = 'low' | 'medium' | 'high';
 export interface License {
   readonly id: string;
   readonly dependencies: LicenseDependency[];
-  readonly severity: string;
+  readonly severity: Severity;
 }
 
 interface BaseDependency {
