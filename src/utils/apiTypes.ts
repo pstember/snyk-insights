@@ -6,7 +6,7 @@ export interface APIFiltersBodyRequest {
 
 export interface Filters {
     readonly orgs: string[];
-    readonly languages: string[];
+    readonly languages?: string[];
     readonly type: string[];
 }
 

@@ -31,7 +31,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 The theme is coming from:
 https://www.creative-tim.com/product/vue-light-bootstrap-dashboard
 
-You will need ot create a `env.local` and have the following properties defined
+You will need ot create a `.env.local` and have the following properties defined
 
 ```
 VUE_APP_ENDPOINT=api
