@@ -24,7 +24,7 @@ export interface Project {
 
 }
 
-export type Severity = 'low' | 'medium' | 'high';
+export type Severity = 'low' | 'medium' | 'high' | 'none';
 
 export interface License {
   readonly id: string;

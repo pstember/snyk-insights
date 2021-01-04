@@ -14,6 +14,7 @@ export default {
         mediumFixable: 0,
         lowFixable: 1,
         noneFixable: 0,
+        criticalMature: 0,
         highMature: 0,
         highAction: 0,
       },
@@ -81,8 +82,39 @@ export default {
           },
         },
       },
+      // vulnerability language distribution graph
+      langVulnsCharOptions: {
+        series: [{
+            data: [],
+          }],
+        chart: { type: 'pie' },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: <b>{point.percentage:.1f} %',
+            },
+          },
+        },
+        caption: {
+          text: 'This chart display the current language distribution of vulnerabilities.',
+        },
+        title: {
+          text: 'Vulnerabilities distribution by language',
+        },
+        tooltip: {
+          pointFormat: '{point.name}: <b>{point.y}</b>',
+        },
+        accessibility: {
+          point: {
+            valueSuffix: '%',
+          },
+        },
+      },
     },
-    licUpdated: false,
+    licUpdated: true,
     // license chart
     licenseChart: {
       series: [{
@@ -169,6 +201,7 @@ export default {
       state.vulnerabilities.metrics = payload.metrics;
       state.vulnerabilities.vulnsCharOptions.series[0].data = payload.data;
       state.vulnerabilities.fixableVulnsCharOptions.series[0].data = payload.dataFix;
+      state.vulnerabilities.langVulnsCharOptions.series[0].data = payload.dataLang;
       state.vulnerabilities.updated = true;
     },
     updateLicense(state, licenses: License[]) {
@@ -187,7 +220,7 @@ export default {
       let green = 0;       
       state.licUpdated = true;
       state.licenseChart.series[0].data = licenses
-        .filter( l => l.severity != "" && l.severity != "none")
+        .filter( l => l.severity != null && l.severity != "none")
         .map( l => { 
         return { 
           name: l.id, 

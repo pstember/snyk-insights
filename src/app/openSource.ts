@@ -49,12 +49,29 @@ export default class OpenSource {
       const mediums = vulns.filter( x => +x.issue.cvssScore < 7.0 && +x.issue.cvssScore >= 4.0 );
       const lows = vulns.filter( x => +x.issue.cvssScore < 4.0 && +x.issue.cvssScore > 0.0 );
       const nones = vulns.filter( x => +x.issue.cvssScore == 0.0 );
+      
+      const languages = ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
+      const langCountMap = new Map();
+      for (const lang of languages) {
+        langCountMap.set(lang, vulns.filter ( x => x.issue.language == lang ).length)
+      }
+
+      const langDistArr = [];
+      for (const langEntry of langCountMap.entries()) {
+        const arrayEntry = {
+          name: langEntry[0],   //lang type
+          y: langEntry[1],    // vulnerability count
+          color: '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6), //random color generator
+        } 
+        langDistArr.push(arrayEntry)
+      }
       const vulnerabilitiesPayload = {
 
         metrics: {
           critical: criticals.length,
           criticalFixable: criticals.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
-          
+          critialMature: criticals.filter(x => x.issue.exploitMaturity == "mature").length,
+
           high: highs.length,
           highFixable: highs.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
           highMature: highs.filter( x=> x.issue.exploitMaturity == "mature").length,
@@ -68,6 +85,29 @@ export default class OpenSource {
           
           none: nones.length,
           noneFixable: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
+
+          nodeCount: langCountMap.get("node"),
+          javascriptCount: langCountMap.get("javascript"),
+          rubyCount: langCountMap.get("ruby"),
+          javaCount: langCountMap.get("java"),
+          scalaCount: langCountMap.get("scala"),
+          pythonCount: langCountMap.get("python"),
+          golangCount: langCountMap.get("golang"),
+          phpCount: langCountMap.get("php"),
+          dotnetCount: langCountMap.get("dotnet"),
+          swiftObjectiveCCount: langCountMap.get("swift-objective-c"),
+
+          //TO DELETE
+          unknownCount: vulns.filter ( x => x.issue.language != "node" && x.issue.language != "javascript" 
+          && x.issue.language != "ruby"  
+          && x.issue.language != "java"
+          && x.issue.language != "scala" 
+          && x.issue.language != "python" 
+          && x.issue.language != "golang" 
+          && x.issue.language != "php" 
+          && x.issue.language != "dotnet"
+          && x.issue.language != "swift-objective-c" ).length,
+
         },
         data: [
           {
@@ -90,11 +130,11 @@ export default class OpenSource {
             y: lows.length,
             color: 'green',
           },
-          {
-            name: 'None',
-            y: nones.length,
-            color: 'grey',
-          },
+          // {
+          //   name: 'None',
+          //   y: nones.length,
+          //   color: 'grey',
+          // },
         ],
         dataFix: [
           {
@@ -117,12 +157,13 @@ export default class OpenSource {
             y: lows.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'green',
           },
-          {
-            name: 'None',
-            y: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
-            color: 'grey',
-          },
+          // {
+          //   name: 'None',
+          //   y: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
+          //   color: 'grey',
+          // },
         ],
+        dataLang: langDistArr,
       }
 
       // debugger;      
