@@ -13,7 +13,7 @@ import DashboardOpenSourceDependencies from './DashboardOpenSourceDependencies.v
 import DashboardOpenSourceLicenses from './DashboardOpenSourceLicenses.vue';
 import DashboardOpenSourceQuality from './DashboardOpenSourceQuality.vue';
 import DashboardOpenSourceActions from './DashboardOpenSourceActions.vue';
-import PieChart from '../charts/PieChart.vue'
+import PieChart from '../charts/PieChart.vue';
 import StatsCard from '../baseElements/baseCards/BaseStatsCard.vue';
 
 @Component({
