@@ -83,8 +83,8 @@
       </b-row>
       <!-- Language Counts -->
       <b-row>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.nodeCount" >
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -94,19 +94,8 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
-            <div slot="header" class="icon-success">
-              <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
-            </div>
-            <div slot="content" class="numbers">
-              <p>Javascript Count</p>
-              {{ $store.getters.vulnerabilities.metrics.javascriptCount }}
-            </div>
-          </stats-card>
-        </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.rubyCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -116,8 +105,8 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.javaCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -127,8 +116,8 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.scalaCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -138,21 +127,19 @@
             </div>
           </stats-card>
         </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.pythonCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
-            </div>
+              </div>
             <div slot="content" class="numbers">
               <p>Python Count</p>
               {{ $store.getters.vulnerabilities.metrics.pythonCount }}
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.golangCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -162,8 +149,8 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.phpCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -173,8 +160,8 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.dotnetCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
@@ -184,29 +171,14 @@
             </div>
           </stats-card>
         </b-col>
-        <b-col>
-          <stats-card>
+        <b-col v-if="$store.getters.vulnerabilities.metrics.swiftObjectiveCCount">
+          <stats-card style="width: 18rem;">
             <div slot="header" class="icon-success">
               <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
             </div>
             <div slot="content" class="numbers">
               <p>Swift ObjectiveC Count</p>
               {{ $store.getters.vulnerabilities.metrics.swiftObjectiveCCount }}
-            </div>
-          </stats-card>
-        </b-col>
-      </b-row>
-      <!-- TO DELETE
-      Where did these come from? -->
-      <b-row>
-        <b-col>
-          <stats-card>
-            <div slot="header" class="icon-success">
-              <b-icon icon="arrow-right" class="con-big text-center" style="color: green;"></b-icon>
-            </div>
-            <div slot="content" class="numbers">
-              <p>Unknown Count ??</p>
-              {{ $store.getters.vulnerabilities.metrics.unknownCount }}
             </div>
           </stats-card>
         </b-col>

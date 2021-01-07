@@ -50,21 +50,30 @@ export default class OpenSource {
       const lows = vulns.filter( x => +x.issue.cvssScore < 4.0 && +x.issue.cvssScore > 0.0 );
       const nones = vulns.filter( x => +x.issue.cvssScore == 0.0 );
       
-      const languages = ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
+      const languages = ['node', 'javascript', 'js', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
       const langCountMap = new Map();
       for (const lang of languages) {
         langCountMap.set(lang, vulns.filter ( x => x.issue.language == lang ).length)
       }
 
       const langDistArr = [];
+      let jsCount = 0;
       for (const langEntry of langCountMap.entries()) {
-        const arrayEntry = {
-          name: langEntry[0],   //lang type
-          y: langEntry[1],    // vulnerability count
-          color: '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6), //random color generator
-        } 
-        langDistArr.push(arrayEntry)
+        if (langEntry[0] == "node" || langEntry[0]  == "javascript" || langEntry[0]  == "js") {
+          jsCount += langEntry[1]
+        } else if (langEntry[1] != 0){
+          const arrayEntry = {
+            name: langEntry[0],   //lang type
+            y: langEntry[1],    // vulnerability count
+          } 
+          langDistArr.push(arrayEntry)
+        }
       }
+      langDistArr.push({name: 'node', y: jsCount})
+
+
+      debugger;
+
       const vulnerabilitiesPayload = {
 
         metrics: {
@@ -86,8 +95,7 @@ export default class OpenSource {
           none: nones.length,
           noneFixable: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
 
-          nodeCount: langCountMap.get("node"),
-          javascriptCount: langCountMap.get("javascript"),
+          nodeCount: langCountMap.get("node") + langCountMap.get("javascript") + langCountMap.get("js"),
           rubyCount: langCountMap.get("ruby"),
           javaCount: langCountMap.get("java"),
           scalaCount: langCountMap.get("scala"),
@@ -96,17 +104,6 @@ export default class OpenSource {
           phpCount: langCountMap.get("php"),
           dotnetCount: langCountMap.get("dotnet"),
           swiftObjectiveCCount: langCountMap.get("swift-objective-c"),
-
-          //TO DELETE
-          unknownCount: vulns.filter ( x => x.issue.language != "node" && x.issue.language != "javascript" 
-          && x.issue.language != "ruby"  
-          && x.issue.language != "java"
-          && x.issue.language != "scala" 
-          && x.issue.language != "python" 
-          && x.issue.language != "golang" 
-          && x.issue.language != "php" 
-          && x.issue.language != "dotnet"
-          && x.issue.language != "swift-objective-c" ).length,
 
         },
         data: [
