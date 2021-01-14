@@ -38,3 +38,7 @@ VUE_APP_ENDPOINT=api
 VUE_APP_SNYK_TOKEN=<YOUR TOKEN>
 VUE_APP_ORG=<YOUR TOKEN>
 ```
+
+
+Some of the icons are coming from https://devicon.dev/
+Not using the NPM package as it is 2 years old and newer icons are needed.

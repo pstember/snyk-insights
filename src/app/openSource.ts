@@ -50,7 +50,7 @@ export default class OpenSource {
       const lows = vulns.filter( x => +x.issue.cvssScore < 4.0 && +x.issue.cvssScore > 0.0 );
       const nones = vulns.filter( x => +x.issue.cvssScore == 0.0 );
       
-      const languages = ['node', 'javascript', 'js', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
+      const languages = ['node', 'javascript', 'js', 'ruby', 'java', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
       const langCountMap = new Map();
       for (const lang of languages) {
         langCountMap.set(lang, vulns.filter ( x => x.issue.language == lang ).length)
@@ -98,7 +98,6 @@ export default class OpenSource {
           nodeCount: langCountMap.get("node") + langCountMap.get("javascript") + langCountMap.get("js"),
           rubyCount: langCountMap.get("ruby"),
           javaCount: langCountMap.get("java"),
-          scalaCount: langCountMap.get("scala"),
           pythonCount: langCountMap.get("python"),
           golangCount: langCountMap.get("golang"),
           phpCount: langCountMap.get("php"),
@@ -160,7 +159,7 @@ export default class OpenSource {
           //   color: 'grey',
           // },
         ],
-        dataLang: langDistArr,
+        dataLang: langDistArr.sort( (a,b) => b.y - a.y),
       }
 
       // debugger;      
