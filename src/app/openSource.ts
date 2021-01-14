@@ -49,12 +49,38 @@ export default class OpenSource {
       const mediums = vulns.filter( x => +x.issue.cvssScore < 7.0 && +x.issue.cvssScore >= 4.0 );
       const lows = vulns.filter( x => +x.issue.cvssScore < 4.0 && +x.issue.cvssScore > 0.0 );
       const nones = vulns.filter( x => +x.issue.cvssScore == 0.0 );
+      
+      const languages = ['node', 'javascript', 'js', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'];
+      const langCountMap = new Map();
+      for (const lang of languages) {
+        langCountMap.set(lang, vulns.filter ( x => x.issue.language == lang ).length)
+      }
+
+      const langDistArr = [];
+      let jsCount = 0;
+      for (const langEntry of langCountMap.entries()) {
+        if (langEntry[0] == "node" || langEntry[0]  == "javascript" || langEntry[0]  == "js") {
+          jsCount += langEntry[1]
+        } else if (langEntry[1] != 0){
+          const arrayEntry = {
+            name: langEntry[0],   //lang type
+            y: langEntry[1],    // vulnerability count
+          } 
+          langDistArr.push(arrayEntry)
+        }
+      }
+      langDistArr.push({name: 'node', y: jsCount})
+
+
+      debugger;
+
       const vulnerabilitiesPayload = {
 
         metrics: {
           critical: criticals.length,
           criticalFixable: criticals.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
-          
+          critialMature: criticals.filter(x => x.issue.exploitMaturity == "mature").length,
+
           high: highs.length,
           highFixable: highs.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
           highMature: highs.filter( x=> x.issue.exploitMaturity == "mature").length,
@@ -68,6 +94,17 @@ export default class OpenSource {
           
           none: nones.length,
           noneFixable: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
+
+          nodeCount: langCountMap.get("node") + langCountMap.get("javascript") + langCountMap.get("js"),
+          rubyCount: langCountMap.get("ruby"),
+          javaCount: langCountMap.get("java"),
+          scalaCount: langCountMap.get("scala"),
+          pythonCount: langCountMap.get("python"),
+          golangCount: langCountMap.get("golang"),
+          phpCount: langCountMap.get("php"),
+          dotnetCount: langCountMap.get("dotnet"),
+          swiftObjectiveCCount: langCountMap.get("swift-objective-c"),
+
         },
         data: [
           {
@@ -90,11 +127,11 @@ export default class OpenSource {
             y: lows.length,
             color: 'green',
           },
-          {
-            name: 'None',
-            y: nones.length,
-            color: 'grey',
-          },
+          // {
+          //   name: 'None',
+          //   y: nones.length,
+          //   color: 'grey',
+          // },
         ],
         dataFix: [
           {
@@ -117,12 +154,13 @@ export default class OpenSource {
             y: lows.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
             color: 'green',
           },
-          {
-            name: 'None',
-            y: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
-            color: 'grey',
-          },
+          // {
+          //   name: 'None',
+          //   y: nones.filter( x => x.issue.isUpgradable || x.issue.isPatchable || x.issue.isPinnable ).length,
+          //   color: 'grey',
+          // },
         ],
+        dataLang: langDistArr,
       }
 
       // debugger;      
