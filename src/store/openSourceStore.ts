@@ -238,7 +238,7 @@ export default {
       state.licenses.total = state.licenses.total - payload.low - payload.medium - payload.high;
     },
     updatePackage(state, packManager) {
-      state.packageChart.series[0].data = Object.entries(packManager).sort(([key, value],[key2, value2]) => value2 - value).map( ([key, value]) => { return { name: key, y: value}});
+      state.packageChart.series[0].data = Object.entries(packManager).sort(([key, value]: any,[key2, value2]: any) => value2 - value).map( ([key, value]) => { return { name: key, y: value}});
     },
     updateDependencies(state, dependencies) {
       state.dependencies = dependencies;
