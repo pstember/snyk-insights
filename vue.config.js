@@ -8,5 +8,13 @@ module.exports = {
         toProxy: true
       }
     }
-  }
+  },
+  chainWebpack: config => {
+    config
+        .plugin('html')
+        .tap(args => {
+            args[0].title = "Snyk Insights";
+            return args;
+        })
+  }  
 }
