@@ -19,13 +19,13 @@ export default class OpenSource {
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
       languages: ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'],
-      type: ['vuln'],
+      types: ['vuln'],
   }};
   protected static  reqLicBody: APIFiltersVulnBodyRequest = { 
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
       languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'],
-      type: ['license'],
+      types: ['license'],
   }};
 
   public static async load() {
