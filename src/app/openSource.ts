@@ -24,7 +24,7 @@ export default class OpenSource {
   protected static  reqLicBody: APIFiltersVulnBodyRequest = { 
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
-      // languages: ['node', 'javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'], // using this screw the request, thanks god we don't do license in docker
+      languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'],
       type: ['license'],
   }};
 
@@ -70,9 +70,6 @@ export default class OpenSource {
         }
       }
       langDistArr.push({name: 'node', y: jsCount})
-
-
-      debugger;
 
       const vulnerabilitiesPayload = {
 
