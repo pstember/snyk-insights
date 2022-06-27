@@ -2,7 +2,7 @@
   <div>
     <b-row>
       <b-col>
-        <h2>Open-source dependencies</h2>
+        <h2>Your level is: </h2>
       </b-col>
     </b-row>
     <!-- Severity Stats -->

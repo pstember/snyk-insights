@@ -24,7 +24,6 @@ export default class OpenSource {
   protected static  reqLicBody: APIFiltersVulnBodyRequest = { 
     filters: { 
       orgs: [process.env.VUE_APP_ORG],
-      languages: ['javascript', 'ruby', 'java', 'scala', 'python', 'golang', 'php', 'dotnet', 'swift-objective-c'],
       types: ['license'],
   }};
 
