@@ -7,7 +7,7 @@ export interface APIFiltersBodyRequest {
 export interface Filters {
     readonly orgs: string[];
     readonly languages?: string[];
-    readonly type: string[];
+    readonly types: string[];
 }
 
 export interface ListIssueResponse {
